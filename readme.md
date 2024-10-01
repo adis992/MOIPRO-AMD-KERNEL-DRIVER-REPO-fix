@@ -15,6 +15,12 @@ HOW TO INSTALL(succesfully) ANY file, folder or progr. install
 1.Download all file from repository and login to putty and puf *.rpm file to /root  folder
 2.yum install kernel-ml-4*.rpm       insalira sve odjednom ili ides 1 po 1
 
+Brisanje kernel fajlova da ne bude sukoba 
+
+yum remove kernel-tools*
+yum remove kernel-head* kernel-3* kernel-devel*
+
+
 ispravis permisije chmod 777 *  prije pokretanja zbog mogucih greski
 ########################################################################################################################
 
@@ -47,16 +53,21 @@ regenerises prvo initframove pa grub i editujes sa vi grub fajl i postavis defau
 export LC_ALL=C
 export LANG=C.UTF-8
 pa onda initframe
+sudo grub2-mkconfig -o /boot/grub2/grub.cfg 
+
+ako za dracut izbaci errror rvo rr pc pa loadaj i onda ovu komandu
+export LC_ALL=C
+export LANG=C.UTF-8
 sudo dracut -f /boot/initramfs-$(uname -r).img $(uname -r)
 
 pa grub
 
-sudo grub2-mkconfig -o /boot/gtub2/grub.cfg
+
 
 pa provjera 
 uname -r   //trenutni kernel
-rm -qa | grep kernel //sve verzije instaliranog kernela
-
+rm -qa | grep kernel* //sve verzije instaliranog kernela
+yum groupinstall -y "Development Tools"
 edituj datoteku za pokretanje zadnjeg installliranog kernela odnosno index=0
 sudo grub2-set-default 0
 ili rucno ovo ispod sa vi komandom
@@ -78,7 +89,7 @@ sudo grub2-set-default 0
 
 #######################################           START INSTALL FULL      ################################################
 
-
+sudo rm -rf /lib/modules/``uname -r``/kernel/drivers/media/*
 yum install yum-utils
 yum install dnf
 
@@ -97,7 +108,8 @@ minimalna verzija gcc za open source za GCC je 8, inace na centos 7 povlaci 4.8.
 provjera installacije npr za gcc
 gcc -v  ili gcc --version
 
-yum install -y  git make ncurses-devel bison flex elfutils-libelf-devel openssl-devel
+yum install -y  git make ncurses-devel bison flex elfutils-libelf-devel openssl-devel automake autoconf  
+
 
 
 eh pa ides na kloniranje linux media repo-a
@@ -109,12 +121,11 @@ git clone --depth=1 https://github.com/tbsdtv/linux_media.git -b latest ./media
 OVDJE CES IMATI PEERS PROBLEM CERT INSTALIRAJ SLJEDECE tj rijesili smo ga sa sslverify false.
 
 
-
-cd media_build
-make dir DIR=../media
-make allyesconfig
-sed -i -r 's/(^CONFIG.*_RC.*=)./\1n/g' v4l/.config
-sed -i -r 's/(^CONFIG.*_IR.*=)./\1n/g' v4l/.config
+cd media_build 
+make dir DIR=../media 
+make allyesconfig 
+sed -i -r 's/(^CONFIG.*_RC.*=)./\1n/g' v4l/.config  
+sed -i -r 's/(^CONFIG.*_IR.*=)./\1n/g' v4l/.config   
 make -j4          ///ovdje zna izbaciti nospec.h kernel eerror fajl imas dolje ispod kako fix
 ovako nesto pise 
 (/root/media_build/v4l/dvb_ca_en50221.c:24:10: fatal error: linux/nospec.h: No such file or directory
@@ -131,15 +142,14 @@ sudo make install
 ####################################  FIRMWARE ZA TBS-KARTICE  #############################################################
 OVO MOZES SVE TROJE ODRADITI I REBOOT NAKON TOGA 
 
-#
+
 wget http://www.tbsdtv.com/download/document/linux/tbs-tuner-firmwares_v1.0.tar.bz2 --no-check-certificate 
 sudo tar jxvf tbs-tuner-firmwares_v1.0.tar.bz2 -C /lib/firmware/
 
-#6909
 wget http://www.tbsdtv.com/download/document/linux/dvb-fe-mxl5xx.fw  --no-check-certificate
 sudo cp dvb-fe-mxl5xx.fw /lib/firmware/
 
-#24117
+
 wget http://www.tbsdtv.com/download/document/common/tbs-linux-drivers_v130901.zip --no-check-certificate
 unzip -p tbs-linux-drivers_v130901.zip linux-tbs-drivers.tar.bz2 | tar jxOf - linux-tbs-drivers/v4l/tbs6981fe_driver.o.x86_64 | dd bs=1 skip=10144 count=55486 of=dvb-fe-cx24117.fw
 

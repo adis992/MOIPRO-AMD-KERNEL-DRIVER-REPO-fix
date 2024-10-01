@@ -1,6 +1,0 @@
-
-#i /etc/yum.repos.d/CentOS-SCLo-scl-rh.rpm
-#ovo rucno prepravi
-#metalink postavis tarabu
-baseurl=http://mirror.nsc.liu.se/centos-store/7.9.2009/sclo/x86_64/rh/
-#samo prvo #mirorlist,a i ukolnis tarabu ispred  baseurl=link editujes 4ovaj ispod
