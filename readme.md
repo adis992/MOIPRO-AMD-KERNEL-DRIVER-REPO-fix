@@ -58,12 +58,17 @@ uname -r   //trenutni kernel
 rm -qa | grep kernel //sve verzije instaliranog kernela
 
 edituj datoteku za pokretanje zadnjeg installliranog kernela odnosno index=0
+sudo grub2-set-default 0
+ili rucno ovo ispod sa vi komandom
 
 vi /etc/default/grub
 
-2 red odnosno grub_default=0  and save it.
+2 red odnosno grub_default=0  and save it.  ovo na prvom kernelu radis znaci 
 
 please rebooot and next is install driver
+ako ne ucita sam, na prvom kernelu samo ovu komandu puknes i index 0 ce staviti zadnje instalirani tj koji si instalirao 
+sudo grub2-set-default 0
+
 
 
 
